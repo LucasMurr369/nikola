@@ -1,0 +1,112 @@
+# Nikola — DEFAULT CONFIG TEMPLATE (safe defaults; no secrets)
+# Copy to a local, gitignored config file to tune:
+#   cp config/settings.yaml.example config/settings.yaml
+# This template ships so the proven defaults are never lost. If no
+# config/settings.yaml exists, engine/config.py hardcoded defaults apply.
+# ---
+# BEGINNER: Leave this file as-is and just run:  python nikola.py --paper
+# ADVANCED: Edit individual values below to tune risk, timing, or pairs.
+# ---
+# Nikola — user-tunable settings
+# Mirrors the proven live-margin-bot parameters; overrides here take precedence.
+
+mode: paper          # "paper" (simulated fills, $300 clean slate) | "live" (real --live flag)
+capital:
+  paper_budget_usd: 300.0     # Nikola.md clean-state restart point
+  live_budget_usd: 1000000.0  # Mirrors config.py TOTAL_MARGIN_BUDGET_USD
+  margin_reserve_pct: 0.0    # 0% = full deploy (BTC SL2/cascade guards the book)
+  max_position_margin_usd: 0.0   # 0 = dynamic equity-based sizing (no static cap)
+  max_position_loss_usd: 10.0   # paper-mode fixed $ loss per trade
+
+risk:
+  sl1_pct: 0.0210              # -2.10% — partial close (40% of base), TPs retained
+  sl2_pct: 0.0440              # -4.40% — full exit of remaining position
+  break_even_buffer_pct: 0.02  # BE floor: entry + 2.0% (ratchets after TP1+TP2)
+  trail_stop_pct: 0.0030       # stage-1 trail 0.30%
+  trail_wide_pct: 0.0060       # stage-2 trail 0.60%
+  trail_wide_arm_pct: 0.025    # switch to wide trail once runner peak >= +2.5%
+  sl_limit_band_pct: 0.015     # stop-loss-limit slippage allowance
+
+# Dynamic Risk-Reward (the 3-state machine)
+dynamic_rr:
+  partial_exit_r: 3.0         # +3× risk → 50% partial exit
+  expand_mtf_threshold: 3     # ≥3/6 TFs confirming trend → expand target (2×ATR trail)
+  atr_trail_mult: 2.0         # 2×ATR trailing distance in EXPANDED state
+  be_ratchet_r: 0.1           # +0.1× risk → move SL to breakeven
+  min_rr_gate: 3.0            # minimum 3:1 accepted at entry
+
+pairs:
+  # Leverage caps -- these OVERRIDE engine/config.py defaults. Technical users
+  # edit HERE to change caps; dynamic leverage stays automated by default.
+  # BTC/ETH uncap to 10x after $150 equity; floor 3x, cap 10x by default.
+  leverage_floor: 3
+  leverage_cap: 20
+  preferred_leverage: 5
+  lev_unlock_equity_usd: 150.0  # BTC/ETH uncap to 20x after this equity
+
+# Three-leader model
+leaders: [BTC, ETH, XRP]
+meme_coins: [DOGE, SHIB, PEPE]
+
+# Multi-timeframe
+mtf_timeframes:
+  - 1m
+  - 5m
+  - 15m
+  - 30m
+  - 1h
+  - 4h
+mtf_candle_limit: 200
+min_tf_agree_deploy: 4   # ≥4 of 6 TFs must agree at deploy time
+strict_momentum_consensus: false  # if true, require 3/3 momentum TFs (harden entry gate)
+entry_min_confidence: 0.50  # MODERATE+ only — meaningful size requirement
+god_code_cycle_sec: 300  # God Code quote scrolls every N seconds (default: 300s = 5 min)
+
+# Safety toggles — disable individual guardrails if you prefer (not recommended)
+safety:
+  guardian_angel: true        # auto-place SL2 protection orders if missing
+  god_code_veto: true         # vetoes trades that profit from harm
+  min_position_floor: 3       # minimum positions before regime can scale to 0 (set 0 to disable)
+
+donor:
+  # Percentage of realized profit to auto-donate (0.0 to 100.0)
+  # Example: if a trade nets $100 and donation_pct=1.0, $1.00 is allocated to donation.
+  # 0.0 = disabled. This only applies to LIVE mode (paper mode never donates).
+  donation_pct: 1.0
+  # 10% tithe of EXTERNAL donations received (not auto-donate from bot profits)
+  # This is what YOU tithe from donations people send you, not what the bot does.
+  external_tithe_pct: 10.0
+  # Which charity receives the tithe (must match a key in tithe_recipients)
+  tithe_recipient: heifer
+  tithe_recipients:
+    heifer:
+      name: "Heifer International"
+      website: "https://www.heifer.org"
+      ein: "35-1019477"
+      rating: "4/4 stars (Charity Navigator 98/100)"
+      description: "End hunger sustainably by gifting livestock + training. 'Pass on the gift' model creates self-sufficient communities."
+      why_we_like_it: "93% to mission, 4-star rated, transparent. Worldbuilders' PRIMARY funding partner — they raise millions for Heifer via geek-culture drives."
+    worldbuilders:
+      name: "Worldbuilders"
+      website: "https://www.worldbuilders.org"
+      ein: "90-0618018"
+      rating: "2/4 stars (Charity Navigator)"
+      description: "Geek-centered nonprofit supporting humanitarian efforts worldwide. Pass-through charity that vets and distributes to other charities."
+      why_we_like_it: "Geek/gaming culture aligns with crypto community, but smaller scale and lower rating — use for symbolic donations only"
+
+
+timing:
+  light_loop_interval: 15   # seconds
+  full_scan_interval: 150   # seconds (match config.py FULL_SCAN_INTERVAL)
+  reentry_cooldown_sec: 3600  # 1h per-pair cooldown
+  stale_ticker_max_age_sec: 900
+
+# Self-learning
+self_learning:
+  weight_min: 0.5
+  weight_max: 1.5
+  adjustment: 0.05          # ±0.05 per trade
+  paper_trade_max_age_hours: 24
+
+logging:
+  level: INFO

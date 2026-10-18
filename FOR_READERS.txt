@@ -1,0 +1,60 @@
+# FOR READERS — Quick Start Guide
+
+> "Nikola is not here to make you rich.
+> Nikola is here to keep you in the game."
+
+## What is NIKOLA?
+
+A **paper-first** cryptocurrency trading bot for Kraken BTNL margin pairs.
+Runs locally on your machine. Zero cloud. Zero subscriptions.
+
+## Can I just run it?
+
+```bash
+# 1. Install
+pip install -r requirements.txt
+
+# 2. Paper trade (zero keys, zero risk) — LEARN FIRST
+python nikola.py --paper
+
+# 3. Watch the log — understand every trade
+#    Regime reports explain what the market looks like
+#    R:R geometry shows the payoff before every entry
+#    God Code quotes add wisdom between trades
+
+# 4. When ready for real money (after paper mastery)
+python nikola.py --live   # REQUIRES kraken.env with API keys
+```
+
+## The One Number to Remember: 3:1
+
+Every trade targets a **3:1 minimum R:R**:
+- TP1 at +1.4% (40% sold) → bank profit fast
+- TP2 at +2.8% (40% sold) → bank 80% total
+- 20% runner → extends to +3.00R and beyond (no force-sells)
+- SL2 at −4.4% → hard stop if wrong
+
+## What Makes NIKOLA Different?
+
+1. **Direction-aware** — trades BOTH long and short, scales position count
+   0–16 based on market quality. NO hard caps.
+2. **200-bar (33-day) trend window** — sees the full macro cycle
+3. **Teaching reports** — regime shifts, R:R geometry, and God Code quotes
+   explain each decision in plain English
+4. **Ethical vetoes** — God Code refuses trades that profit from harm
+5. **100% voluntary donations** — completely free, tithes 10% to charity
+   (Heifer International by default, configurable)
+
+## Stumbling Through?
+
+Read this section first, then:
+- **Beginner**: Just run `--paper` and read the log
+- **Practitioner**: Understand the regime system (STEADY/GOLD/CLEAR)
+- **Advanced**: Customize `config/settings.yaml` for your risk tolerance
+
+Need help? Open an issue or email: donations@nikola-bot.org
+
+---
+
+*This file is meant to be read in 30 seconds flat. If anything here
+confuses you, that's a bug in the docs — please let us know.*

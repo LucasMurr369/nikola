@@ -1,0 +1,33 @@
+MIT License
+
+Copyright (c) 2026 Lucas Murr (Luke Murr) — Nikola Project
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+### Tithe Philosophy
+The Nikola Project is 100% free and open-source. Donations are 100% voluntary.
+If you find value and choose to give, 10% of external donations you receive
+flows to Heifer International (EIN 35-1019477, 4/4 Charity Navigator stars)
+via the `donor.tithe_recipient` setting in `config/settings.yaml.example`.
+
+The bot's own auto-donate feature allocates 1% of realized LIVE-mode profits
+to the project's donation address — a separate, configurable mechanism
+(`donor.donation_pct`, default 1.0%).

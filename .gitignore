@@ -1,0 +1,42 @@
+# --- Secrets: NEVER commit ---
+*.env
+.env*
+kraken.env
+settings.yaml
+config/settings.yaml
+config/LIVE_SETTINGS.yaml
+config.yaml
+
+# --- Runtime / volatile state ---
+*.pid
+nikola_live.log*
+paper_nikola.log*
+*.log
+data/
+engine/nonce_state.json
+nul
+
+# --- Temporary HTML exports ---
+nikola_report.html
+*_analysis.html
+*_report.html
+*_state_widget.html
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Utility / audit scripts (dev-only, not committed) ---
+check_exchange.py
+dry_run_patch_test.py
+verify_sl2.py
+scripts/
