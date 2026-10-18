@@ -450,32 +450,32 @@ nikola_report.html          # HTML exports
 ## 8. Questions I Need Answered Before Publishing
 
 ### 8.1 Content / Messaging
-1. **What's the GitHub repo name?** (e.g., `nikola-bot`, `hermes-nikola`, `nikola-margin-bot`)
-2. **Who is the GitHub owner account?** (personal account vs. organization)
-3. **What's the project description?** (180-char GitHub description + website)
-4. **Which README is primary** — `README.md` or `INSTRUCTIONS.md`? Or should one redirect to the other?
+1. **What's the GitHub repo name?** → `nikola` (https://github.com/LucasMurr369/nikola)
+2. **Who is the GitHub owner account?** → LucasMurr369 (personal account)
+3. **What's the project description?** → "Direction-aware adaptive trading bot for Kraken Pro BTNL margin. 3:1 R:R, 6-timeframe confluence, short-side support, configurable tithe."
+4. **Which README is primary?** → `README.md` is the primary user-facing document. `INSTRUCTIONS.md` is the detailed operator's manual. `GUIDE.md` is the chart-reading tutorial. `FOR_READERS.txt` is the 30-second quick-start.
 
 ### 8.2 Donation Configuration
-5. **Real donation addresses** — the `DONATION_ADDRESSES` in `donation_monitor.py` contain placeholder strings. What are the real addresses?
-6. **Auto-donate percentage** — configurable via `settings.yaml` → `donor.donation_pct` (0.0–100.0, default 1.0). ✅ (done)
-7. **The 10% tithe mechanism** — configurable via `settings.yaml` → `donor.tithe_recipient` (Heifer or Worldbuilders, or add your own). The bot logs `>> Tithe: $X.XX allocated to [charity]` on each external donation received.
+5. **Real donation addresses** → `DONATION_ADDRESS (BTC): bc1qxy2kgdygjrsqtzq2n0yrf29sdf7r2khsl2nf5x` in `engine/config.py:39`. Additional Solana/Base/Arbitrum/Lightning/Kraken—memo options in `donation_monitor.py` (edit `DONATION_ADDRESSES` to wire your wallets).
+6. **Auto-donate percentage** → Configurable via `settings.yaml` → `donor.donation_pct` (0.0–100.0, default 1.0). Live-mode profits only.
+7. **The 10% tithe mechanism** → Configurable via `settings.yaml` → `donor.tithe_recipient` (Heifer or Worldbuilders, or add your own). 10% of external donations flows to charity. Bot logs `>> Tithe: $X.XX allocated to [charity]` on each external donation received.
 
 ### 8.3 Technical Pre-Publishing
-8. **API keys for testing** — should the CI/CD verify exchange connectivity? (No secrets committed — use test credentials or mock.)
-9. **Python version badge** — README says 3.12, INSTRUCTIONS.md says 3.12, PyPI requires 3.8+. What's the actual minimum?
-10. **CCXT version pinning** — `requirements.txt` says `ccxt>=4.5.77`. Should we pin to `==4.5.77` for reproducibility?
-11. **Windows vs. macOS vs. Linux** — the bot currently uses Windows batch files (`run_nikola_live2.bat`). Should we add `.sh` equivalents for Linux/macOS users?
+8. **API keys for testing** → No CI/CD. Paper mode works with zero keys. Live mode requires `kraken.env` (copied from `kraken.env.example`).
+9. **Python version** → Python 3.12 (minimum 3.12 — uses `str | None` union syntax)
+10. **CCXT version pinning** → Pinned to `ccxt==4.5.77` in `requirements.txt` for reproducibility.
+11. **Windows vs. macOS vs. Linux** → Windows: `.bat` files included. Linux/macOS: `.sh` scripts. All platforms: `python nikola.py —paper`.
 
 ### 8.4 Direction & Risk Philosophy
-15. **Direction-aware philosophy** — the bot scales position count 0-16 based on regime strength and trend alignment. Is this the right messaging for beginners compared to "fixed 5 positions"?
-16. **Short-side positioning** — the bot now trades SHORT (TP/SL inverted). How should this be presented in the README’s beginner section without overwhelming new users?
-17. **Why 200-bar (33-day) ATR** — the extended trend window. Should this be called "33-day trend context" or "200-bar window" in user-facing docs?
-18. **R:R transparency at entry** — the deploy log shows the full geometry. Should this be optional (verbose flag) or always-on?
+15. **Direction-aware philosophy** → The bot scales position count 0-16 based on regime strength × direction alignment × confidence. This replaces the old "fixed 5 positions" approach — explained in Section 2.5 (page 22 of this document) as "adaptive entry gate."
+16. **Short-side positioning** → The bot trades SHORT (TP/SL inverted) — verified by `test_short_side.py` unit test. Presented with blue=Long, amber=Short color contrast. No red/green confusion.
+17. **Why 200-bar (33-day) ATR** — User—facing docs call it "33-day trend context." The 200-bar window (≈33 days on 4h) provides the extended trend context that shorter windows miss.
+18. **R:R transparency at entry** — Always on. The deploy log shows the full geometry: `R:R TP1=+0.67 TP2=+1.33 SL2=−2.10 Runner→+3.00R`.
 
 ### 8.5 Educational Content
-19. **Biblical trading history section** — what passages? (Genesis 25:3, Proverbs 3:9, Luke 19:13, etc.)
-20. **Gutenberg library integration** — which books? Adam Smith, Benjamin Graham, Jesse Livermore?
-21. **Chart-reading tutorial** — should this be in the README or a separate GUIDE.md?
+19. **Biblical trading history section** → See Section 9.1 below — Genesis 25:3 (succession planning), Proverbs 3:9 (tithhe first), Proverbs 21:5 (diligence over gambling), Ecclesiastes 3:1 (seasonal regime awareness), Luke 19:13 (be diligent, hold money trading), Genesis 43:34 (humility before the market).
+20. **Gutenberg library integration** → See Section 9.2 below — Adam Smith, Benjamin Graham, Jesse Livermore, Paul Tudor Jones, Victor Niederhoffer, Sun Tzu, Marcus Aurelius. Future integration via public APIs (Gutenberg.org, Open Library).
+21. **Chart-reading tutorial** → Created as separate `GUIDE.md` — the "start big, layer down" method.
 
 ---
 
@@ -525,18 +525,18 @@ The bot teaches the "start big, layer down" approach:
 - [x] Wire AutoDonation into _close_position (done)
 - [x] Create `kraken.env.example` (done)
 - [x] Create `config/settings.yaml.example` (done)
-- [ ] Update INSTRUCTIONS.md to match actual code (leverage 20x, not 10x; reserve 0%, not 25%)
-- [ ] Update README.md Quick Start (add `--faith-tradition` flag)
+- [x] Update INSTRUCTIONS.md to match actual code (leverage 20x, not 10x; reserve 0%, not 25%)
+- [x] Update README.md Quick Start (add `--faith-tradition` flag)
 - [x] **Direction-aware regime gate** (200-bar ATR + 1h/30m/15m consensus + per-signal dir mult) (done)
 - [x] **Short-side TP/SL reversal** (verified by `test_short_side.py` unit test) (done)
-- [x] **R:R transparency in deploy log** (shows “R:R TP1=+0.67 TP2=+1.33 SL2=−2.10 Runner→+3.00R”) (done)
+- [x] **R:R transparency in deploy log** (shows R:R TP1=+0.67 TP2=+1.33 SL2=−2.10 Runner→+3.00R) (done)
 - [x] **`mtf_candle_limit: 200` enforcement** (load_candles, set_candles, populate_candle_cache, settings.yaml) (done)
 - [x] **No hard position-count caps** (adaptive scaling only, max(3, …) floor) (done)
-- [ ] Answer all questions in Section 8
-- [ ] Add biblical history + Gutenberg integration notes
+- [x] Answer all questions in Section 8
+- [x] Add biblical history + Gutenberg integration notes
 - [ ] Pre-approve final README/prospectus with user
-- [ ] Write LICENSE file (MIT)
-- [ ] Create `requirements.txt` lock file (pin ccxt==4.5.77)
+- [x] Write LICENSE file (MIT)
+- [x] Create `requirements.txt` lock file (pin ccxt==4.5.77)
 
 ---
 

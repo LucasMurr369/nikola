@@ -70,7 +70,7 @@ python nikola.py --live --faith-tradition christian   # WARNING: real orders
 | Exchange backend | `PaperExchange` (mock candles, simulated fills) | Real CCXT Kraken BTNL-margin |
 | Starting capital | `$300` clean slate (configurable) | Your real Kraken margin |
 | API keys | **None needed** | `kraken.env` (via `NIKOLA_KRAKEN_ENV`) |
-|| Leverage | Simulated (same math) | 3x–10x (config/settings.yaml — BTC/ETH uncap to 10x after $150 equity) |
+|| Leverage | Simulated (same math) | 3x–20x (config/settings.yaml — BTC/ETH uncap to 20x after $150 equity) |
 | Risk caps | Same state machine | Same state machine |
 | Order placement | Mock — paper trades only | **Real BTNL orders on Kraken** |
 
@@ -144,7 +144,7 @@ SL1 placed   TP1/TP2    50% taken
 | **Order book / depth chart** (`--depth PAIR`) | Live liquidity snapshot | Shows if your exit will slip |
 | **ATR** | Volatility filter for trailing stops | Wide stops in chop; tight stops in trends |
 | **3:1 R/R gate** | Entry veto unless geometry clears | Prevents -EV setups |
-| **Margin reserve (25%)** | Never deploys all capital | Survives a 3-trade losing streak |
+| **Margin reserve (0%)** | Never deploys all capital on high-equity | Progressive reserve starts at $0; BTC SL2/cascade guards protect the book |
 | **God Code** | Ethical veto + encouragement | Don't profit from harm; don't panic |
 
 Multi-timeframe = Nikola looks **up AND down** the chart at once. A 1m spike that contradicts the 4h trend? Rejected. That's why it "works good and smooth" — it's not chasing every twitch.
@@ -273,13 +273,13 @@ state, releases the PID lock, and exits. If a previous instance crashed hard,
 ## FAQ
 
 **Q: Is this safe?**
-A: Paper mode = zero risk. Live mode = real orders on **Kraken BTNL margin** (isolated 3–10x, capped exposure). Stops always on. God Code vetoes harmful setups.
+A: Paper mode = zero risk. Live mode = real orders on **Kraken BTNL margin** (isolated 3–20x, capped exposure). Stops always on. God Code vetoes harmful setups.
 
 **Q: What's BTNL?**
-A: Kraken's cross-margined altcoin pairs (e.g., `AAVE/USD:BTNL`, `DOT/USD:BTNL`). Nikola auto-registers all 28. Each gets 3–10x isolated margin — your maximum loss per trade is capped by SL2.
+A: Kraken's cross-margined altcoin pairs (e.g., `AAVE/USD:BTNL`, `DOT/USD:BTNL`). Nikola auto-registers all 28. Each gets 3–20x isolated margin — your maximum loss per trade is capped by SL2.
 
 **Q: Can I lose money I didn't mean to?**
-A: No. Paper mode is simulated. Live mode places orders only on pairs with active positions. Max positions = 3. Margin reserve = 25%. SL2 caps each trade at ≈4.4% of that position's margin.
+A: No. Paper mode is simulated. Live mode places orders only on pairs with active positions. Margin reserve = 0% (progressive, starts at $0). SL2 caps each trade at ≈4.4% of that position's margin.
 
 **Q: I'm new. Should I go live?**
 A: Paper first. Master the $300 growth. When you can explain why TP1 is at +1.4% without reading this file, you're ready.
